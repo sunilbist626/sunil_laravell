@@ -17,6 +17,7 @@ jobs:
       - name: Copy .env file
         run: |
           sudo cp /tmp/.env /var/www/html/laravel-todolist-api-main/.env
+          sudo chown -R sunil:sunil /var/www/html/laravel-todolist-api-main
       - name: Install Composer dependencies
         run: |
           cd /var/www/html/laravel-todolist-api-main
