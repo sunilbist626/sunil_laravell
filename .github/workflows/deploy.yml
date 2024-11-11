@@ -12,6 +12,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Copy .env file
+        run: |
+          sudo cp /tmp/.env /var/www/html/laravel-todolist-api-main/.env
+
       - name: Sync repository to deployment folder
         run: |
           sudo rsync -a --delete ${GITHUB_WORKSPACE}/ /var/www/html/laravel-todolist-api-main/
@@ -20,6 +24,11 @@ jobs:
         run: |
           cd /var/www/html/laravel-todolist-api-main
           composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Generate application key if not set
+        run: |
+          cd /var/www/html/laravel-todolist-api-main
+          php artisan key:generate --force
 
       - name: Run tests
         run: |
