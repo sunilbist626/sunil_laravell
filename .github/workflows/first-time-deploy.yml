@@ -1,0 +1,47 @@
+name: First-Time Laravel Deployment
+
+on:
+  workflow_dispatch: # Allows manual triggering of this workflow
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Sync files to deployment folder
+        run: |
+          sudo rsync -a --delete ${GITHUB_WORKSPACE}/ /var/www/html/laravel-todolist-api-main/
+
+      - name: Copy .env file
+        run: |
+          sudo cp /tmp/.env /var/www/html/laravel-todolist-api-main/.env
+
+      - name: Generate application key
+        run: |
+          cd /var/www/html/laravel-todolist-api-main
+          php artisan key:generate --force
+
+      - name: Install Composer dependencies
+        run: |
+          cd /var/www/html/laravel-todolist-api-main
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run migrations
+        run: |
+          cd /var/www/html/laravel-todolist-api-main
+          php artisan migrate --force
+          php artisan db:seed
+
+      - name: Cache configurations
+        run: |
+          cd /var/www/html/laravel-todolist-api-main
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+
+      - name: Restart services
+        run: |
+          sudo systemctl restart php8.3-fpm
+          sudo systemctl restart nginx
