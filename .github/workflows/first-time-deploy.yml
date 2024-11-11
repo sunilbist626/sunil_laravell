@@ -17,16 +17,17 @@ jobs:
       - name: Copy .env file
         run: |
           sudo cp /tmp/.env /var/www/html/laravel-todolist-api-main/.env
+      - name: Install Composer dependencies
+        run: |
+          cd /var/www/html/laravel-todolist-api-main
+          composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate application key
         run: |
           cd /var/www/html/laravel-todolist-api-main
           php artisan key:generate --force
 
-      - name: Install Composer dependencies
-        run: |
-          cd /var/www/html/laravel-todolist-api-main
-          composer install --no-interaction --prefer-dist --optimize-autoloader
+
 
       - name: Run migrations
         run: |
