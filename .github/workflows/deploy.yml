@@ -12,13 +12,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Copy .env file
-        run: |
-          sudo cp /tmp/.env /var/www/html/laravel-todolist-api-main/.env
 
       - name: Sync repository to deployment folder
         run: |
           sudo rsync -a --delete ${GITHUB_WORKSPACE}/ /var/www/html/laravel-todolist-api-main/
+      - name: Copy .env file
+        run: |
+          sudo cp /tmp/.env /var/www/html/laravel-todolist-api-main/.env
 
       - name: Install Composer dependencies
         run: |
