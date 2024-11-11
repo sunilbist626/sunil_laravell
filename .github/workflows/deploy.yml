@@ -25,10 +25,7 @@ jobs:
           cd /var/www/html/laravel-todolist-api-main
           composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Generate application key if not set
-        run: |
-          cd /var/www/html/laravel-todolist-api-main
-          php artisan key:generate --force
+
 
       - name: Run tests
         run: |
