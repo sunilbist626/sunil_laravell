@@ -7,10 +7,14 @@ on:
 
 jobs:
   build-test-deploy:
-    runs-on: self-hosted  # Specifies to use the self-hosted runner
+    runs-on: self-hosted
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+
+      - name: Sync repository to deployment folder
+        run: |
+          sudo rsync -a --delete ${GITHUB_WORKSPACE}/ /var/www/html/laravel-todolist-api-main/
 
       - name: Install Composer dependencies
         run: |
@@ -31,4 +35,3 @@ jobs:
           php artisan view:cache
           sudo systemctl restart php8.3-fpm
           sudo systemctl restart nginx
-
